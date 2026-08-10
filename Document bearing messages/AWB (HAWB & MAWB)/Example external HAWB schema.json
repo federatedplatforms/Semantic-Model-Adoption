@@ -1,0 +1,349 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Air Waybill (AWB) JSON Schema",
+  "description": "Air Waybill (AWB) JSON Schema",
+  "type": "object",
+  "required": [ "@context", "type", "id", "shipment" ],
+  "properties": {
+    "@context": {
+      "type": [ "string", "object" ],
+      "description": "JSON-LD context"
+    },
+    "type": {
+      "type": "string",
+      "const": "Houseway bill",
+      "description": "Resource type"
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical URI or unique identifier for this HAWB"
+    },
+
+    "meta": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": { "type": "string" }
+      }
+    },
+
+    "shipment": {
+      "type": "object",
+      "required": [ "hawbNumber", "consignment", "transport" ],
+      "properties": {
+        "hawbNumber": {
+          "type": "object",
+          "required": [ "prefix", "serialNumber" ],
+          "properties": {
+            "prefix": {
+              "type": "string",
+              "pattern": "^[0-9]{3}$"
+            },
+            "serialNumber": {
+              "type": "string",
+              "pattern": "^[0-9]{8}$"
+            },
+            "checkDigit": {
+              "type": "string",
+              "pattern": "^[0-9]$"
+            },
+            "formatted": { "type": "string" }
+          }
+        },
+
+        "service": {
+          "type": "object",
+          "properties": {
+            "serviceCode": { "type": "string" },
+            "product": { "type": "string" },
+            "specialHandlingCodes": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+
+        "consignment": {
+          "type": "object",
+          "required": [ "origin", "destination", "pieces", "weight" ],
+          "properties": {
+            "origin": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "destination": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "routing": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "sequence": { "type": "integer" },
+                  "carrierCode": { "type": "string" },
+                  "flightNumber": { "type": "string" },
+                  "flightDate": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "from": { "type": "string" },
+                  "to": { "type": "string" }
+                }
+              }
+            },
+
+            "pieces": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "weight": {
+              "type": "object",
+              "required": [ "value", "unit" ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": [ "K", "L" ]
+                }
+              }
+            },
+            "volume": {
+              "type": "object",
+              "properties": {
+                "value": { "type": "number" },
+                "unit": {
+                  "type": "string",
+                  "enum": [ "MC", "CF" ]
+                }
+              }
+            },
+            "goods": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "description": { "type": "string" },
+                  "commodityCode": { "type": "string" },
+                  "quantity": { "type": "number" },
+                  "quantityUnit": { "type": "string" },
+                  "declaredValue": { "type": "number" },
+                  "declaredCurrency": { "type": "string" }
+                }
+              }
+            },
+
+            "customs": {
+              "type": "object",
+              "properties": {
+                "hsCode": { "type": "string" },
+                "invoiceValue": { "type": "number" },
+                "currency": { "type": "string" }
+              }
+            }
+          }
+        },
+
+        "parties": {
+          "type": "object",
+          "required": [ "shipper", "consignee" ],
+          "properties": {
+            "shipper": {
+              "type": "object",
+              "required": [ "name", "address", "country" ],
+              "properties": {
+                "name": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "postalCode": { "type": "string" },
+                "country": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{2}$"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "phone": { "type": "string" },
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                }
+              }
+            },
+
+            "consignee": {
+              "type": "object",
+              "required": [ "name", "address", "country" ],
+              "properties": {
+                "name": { "type": "string" },
+                "address": { "type": "string" },
+                "city": { "type": "string" },
+                "postalCode": { "type": "string" },
+                "country": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{2}$"
+                },
+                "contact": {
+                  "type": "object",
+                  "properties": {
+                    "phone": { "type": "string" },
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                }
+              }
+            },
+
+            "notify": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "address": { "type": "string" }
+              }
+            },
+
+            "agent": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "partyId": { "type": "string" }
+              }
+            },
+
+            "carrier": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "iataCode": { "type": "string" }
+              }
+            }
+          }
+        },
+
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "id": { "type": "string" },
+              "issuedBy": { "type": "string" },
+              "issuedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+
+        "references": {
+          "type": "object",
+          "properties": {
+            "airwayBillReference": { "type": "string" },
+            "orderReference": { "type": "string" },
+            "customerReference": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "transport": {
+      "type": "object",
+      "properties": {
+        "planned": {
+          "type": "object",
+          "properties": {
+            "legs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "legId": { "type": "string" },
+                  "carrier": { "type": "string" },
+                  "flightNumber": { "type": "string" },
+                  "departure": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "arrival": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "from": { "type": "string" },
+                  "to": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+
+        "actual": {
+          "type": "object",
+          "properties": {
+            "events": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "eventType": { "type": "string" },
+                  "eventTime": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "location": { "type": "string" },
+                  "carrier": { "type": "string" },
+                  "details": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "itemId": { "type": "string" },
+          "description": { "type": "string" },
+          "markings": { "type": "string" },
+          "pcs": { "type": "integer" },
+          "weight": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "number" },
+              "unit": { "type": "string" }
+            }
+          },
+          "dimensions": {
+            "type": "object",
+            "properties": {
+              "length": { "type": "number" },
+              "width": { "type": "number" },
+              "height": { "type": "number" },
+              "unit": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "additionalProperties": false
+}
