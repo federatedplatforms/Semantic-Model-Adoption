@@ -1,0 +1,70 @@
+{
+    "shippingInstructionsReference": "fc5009a7-25ad-4bb0-9892-4e2dea6bcdd9",
+    "shippingInstructionsStatus": "RECEIVED",
+    "transportDocumentTypeCode": "BOL",
+    "isShippedOnBoardType": true,
+    "freightPaymentTermCode": "PRE",
+    "isElectronic": true,
+    "isToOrder": true,
+    "invoicePayableAt": {
+        "UNLocationCode": "DKAAR"
+    },
+    "isCargoDeliveredInICS2Zone": false,
+    "partyContactDetails": [
+        {
+            "name": "DCSA test person",
+            "email": "no-reply@dcsa.example.org"
+        }
+    ],
+    "documentParties": {
+        "shipper": {
+            "partyName": "DCSA CTK",
+            "displayedAddress": [
+                "Strawinskylaan 4117"
+            ],
+            "partyContactDetails": [
+                {
+                    "name": "DCSA test person",
+                    "email": "no-reply@dcsa.example.org"
+                }
+            ]
+        }
+    },
+    "consignmentItems": [
+        {
+            "carrierBookingReference": "CBR_123_REGULAR",
+            "descriptionOfGoods": [
+                "Shoes - black"
+            ],
+            "HSCodes": [
+                "640510"
+            ],
+            "commoditySubReference": "RegSubRef001",
+            "cargoItems": [
+                {
+                    "equipmentReference": "NARU3472484",
+                    "cargoGrossWeight": {
+                        "value": 12000,
+                        "unit": "KGM"
+                    },
+                    "outerPackaging": {
+                        "numberOfPackages": 400,
+                        "packageCode": "4G",
+                        "description": "Fibreboard boxes"
+                    }
+                }
+            ]
+        }
+    ],
+    "utilizedTransportEquipments": [
+        {
+            "isShipperOwned": false,
+            "seals": [
+                {
+                    "number": "DCSA-CTK-1234"
+                }
+            ],
+            "equipmentReference": "NARU3472484"
+        }
+    ]
+}
