@@ -1,0 +1,114 @@
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml:      <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix dc:       <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix vann:     <http://purl.org/vocab/vann/> .
+@prefix foaf:     <http://xmlns.com/foaf/0.1/> .
+@prefix iata:    <https://onerecord.iata.org/ns/cargo#> .
+@prefix dt:       <https://ontology.tno.nl/logistics/federated/DigitalTwin#> .
+@prefix lp:       <https://ontology.tno.nl/logistics/federated/LegalPerson#> .
+@prefix event:    <https://ontology.tno.nl/logistics/federated/Event#> .
+@prefix loc:      <https://ontology.tno.nl/logistics/federated/Location#> .
+@base             <https://ontology.tno.nl/logistics/federated/alignment/IATA-ONE-Record-2026-07#> .
+
+#################################################################
+#    Ontology
+#################################################################
+
+<https://ontology.tno.nl/logistics/federated/alignment/IATA-ONE-Record>
+  rdf:type owl:Ontology ;
+  owl:versionInfo "v0.1" ;
+  owl:versionIRI <https://ontology.tno.nl/logistics/federated/alignment/IATA-ONE-Record-v0.1> ;
+  dcterms:issued "2026-07-01"^^xsd:date ;
+  dcterms:modified "2026-09-04"^^xsd:date ;
+  dcterms:language "en" ;
+  dcterms:title "Alignment between the IATA ONE Record ontology and the FEDeRATED ontology"@en ;
+  dcterms:publisher <https://www.tno.nl/> ;
+  dcterms:creator "Theodor Chirvasuta" ;
+  vann:preferredNamespacePrefix "align-1r-fed" ;
+  vann:preferredNamespaceUri "https://ontology.tno.nl/logistics/federated/alignment/IATA-ONE-Record#" ;
+  dcterms:description """This ontology provides a set of alignment axioms relating concepts of the IATA ONE Record cargo ontology (https://onerecord.iata.org/ns/cargo#) to concepts of the FEDeRATED semantic model. The correspondences are expressed with SKOS mapping relations and are intended to support semantic interoperability between the air cargo (ONE Record) and multimodal logistics (FEDeRATED) data spaces."""@en ;
+  rdfs:comment "The mapping statements are read from the IATA ONE Record concept (subject) to the FEDeRATED concept (object). One illustrative example is provided for each SKOS mapping relation: exactMatch, closeMatch, broadMatch, narrowMatch and relatedMatch."@en ;
+  owl:imports <https://onerecord.iata.org/ns/cargo> ,
+              <https://ontology.tno.nl/logistics/federated/DigitalTwin> ,
+              <https://ontology.tno.nl/logistics/federated/LegalPerson> ,
+              <https://ontology.tno.nl/logistics/federated/Event> ,
+              <https://ontology.tno.nl/logistics/federated/Location> .
+
+dc:creator                    a owl:AnnotationProperty .
+dcterms:issued                a owl:AnnotationProperty .
+dcterms:modified              a owl:AnnotationProperty .
+dcterms:language              a owl:AnnotationProperty .
+dcterms:title                 a owl:AnnotationProperty .
+dcterms:publisher             a owl:AnnotationProperty .
+dcterms:creator               a owl:AnnotationProperty .
+dcterms:description           a owl:AnnotationProperty .
+vann:preferredNamespacePrefix a owl:AnnotationProperty .
+vann:preferredNamespaceUri    a owl:AnnotationProperty .
+
+#################################################################
+#    SKOS alignment mappings  (IATA ONE Record  ->  FEDeRATED)
+#################################################################
+
+iata:Booking skos:narrowMatch event:Event .
+iata:Waybill skos:narrowMatch event:Event .
+# events
+iata:LogisticsEvent  skos:exactMatch    event:Event .
+iata:involvedParties skos:exactMatch event:involvesActor .
+iata:eventLocation skos:exactMatch event:involvesLocation .
+iata:creationDate skos:closeMatch event:involvesTimestamp . # "creation" is delegated as the :involvesTimeClassification string
+iata:eventDate skos:closeMatch event:involvesTimestamp . # actual "event" is delegated as the :involvesTimeClassification string
+iata:eventTimeType skos:closeMatch event:involvesTimeClassification . # TODO: extract classification from EventTimeType for potential codelist module
+iata:externalReference skos:closeMatch event:involvesBusinessIdentifier .
+iata:recordingOrganization skos:broadMatch iata:involvesActor .
+iata:recordingActor skos:broadMatch iata:involvesActor .
+
+iata:Loading skos:broadMatch event:Event .
+iata:LogisticsAction skos:broadMatch event:Event .
+iata:LogisticsActivity skos:narrowMatch event:Event .
+iata:LogisticsService skos:narrowMatch event:Event .
+iata:Shipment skos:closeMatch event:Event .
+iata:StatusUpdateEvent skos:exactMatch event:Event .
+iata:TransportLegs skos:narrowMatch event:Event .
+iata:TransportMovement skos:closeMatch event:Event .
+
+# transport means
+iata:TransportMeans  skos:exactMatch    dt:TransportMeans .
+iata:vehicleType skos:broadMatch dt:transportMeansMode .
+iata:vehicleModel skos:broadMatch dt:transportMeansMode .
+iata:vehicleRegistration skos:closeMatch dt:hasExternalIdentifier .
+iata:vehicleSize skos:broadMatch dt:size .
+
+# locations
+iata:Location skos:exactMatch loc:BusinessLocation .
+iata:addressCode skos:closeMatch loc:LOCODE .
+iata:GeoLocation skos:exactmatch <http://schema.org/Place> .
+
+# goods
+iata:LogisticsObject skos:exactMatch dt:LogisticsObject .
+iata:Item         skos:broadMatch    dt:PiecesGoods .
+iata:LineItemPackage skos:broadmatch dt:PiecesGoods .
+iata:LoadType skos:closeMatch dt:Goods .
+iata:LoadingMaterial skos:broadMatch dt:Goods .
+iata:LoosePiece skos:broadMatch dt:PiecesGoods .
+iata:typeCode skos:exactMatrch dt:packageCode .
+iata:Piece skos:broadMatch dt:PiecesGoods .
+iata:Product skos:closeMatch dt:Goods .
+iata:LoadingUnit     skos:narrowMatch   dt:ULD .
+iata:WaybillLineItem skos:broadMatch dt:Goods .
+
+# actors
+iata:LogisticsAgent skos:closeMatch lp:Actor .
+iata:Party skos:exactMatch lp:Actor .
+iata:Person skos:broadMatch lp:LegalPerson .
+iata:Organization skos:broadMatch lp:LegalPerson .
+
+# measurements
+iata:Measurement skos:narrowMatch dt:VolumeMeasurement .
+iata:Measurement skos:narrowMatch dt:WeightMeasurement .
+
+
