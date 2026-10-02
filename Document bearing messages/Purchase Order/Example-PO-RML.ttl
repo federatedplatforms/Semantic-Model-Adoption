@@ -1,0 +1,391 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix schema: <http://schema.org/> .
+
+[]
+  a rr:TriplesMap ;
+  rml:logicalSource [
+    rml:source "data.json" ;
+    rml:referenceFormulation ql:JSONPath ;
+    rml:iterator "$"
+  ] ;
+  rr:subjectMap [
+    rr:termType rr:BlankNode ;
+    rr:class <https://ontology.tno.nl/logistics/federated/Event#Event>
+  ] ;
+  rr:predicateObjectMap [
+    rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesActor> ;
+    rr:objectMap [
+      rr:parentTriplesMap [
+        a rr:TriplesMap ;
+        rml:logicalSource [
+          rml:source "data.json" ;
+          rml:referenceFormulation ql:JSONPath ;
+          rml:iterator "$.involvesActor"
+        ] ;
+        rr:subjectMap [
+          rr:termType rr:BlankNode ;
+          rr:class <https://ontology.tno.nl/logistics/federated/LegalPerson#Actor>
+        ] ;
+        rr:predicateObjectMap [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#actorRole> ;
+          rr:objectMap [ rml:reference "actorRole" ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#involvesLegalPerson> ;
+          rr:objectMap [
+            rr:parentTriplesMap [
+              a rr:TriplesMap ;
+              rml:logicalSource [
+                rml:source "data.json" ;
+                rml:referenceFormulation ql:JSONPath ;
+                rml:iterator "$.involvesActor.involvesLegalPerson"
+              ] ;
+              rr:subjectMap [
+                rr:termType rr:BlankNode ;
+                rr:class <https://ontology.tno.nl/logistics/federated/LegalPerson#LegalPerson>
+              ] ;
+              rr:predicateObjectMap [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#legalPersonName> ;
+                rr:objectMap [ rml:reference "legalPersonName" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#legalPersonCountryOfOrigin> ;
+                rr:objectMap [ rml:reference "legalPersonCountryOfOrigin" ]
+              ]
+            ] ;
+            rr:joinCondition [
+              rr:child "." ;
+              rr:parent ".."
+            ]
+          ]
+        ]
+      ] ;
+      rr:joinCondition [
+        rr:child "." ;
+        rr:parent ".."
+      ]
+    ]
+  ], [
+    rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesBusinessIdentifier> ;
+    rr:objectMap [
+      rr:parentTriplesMap [
+        a rr:TriplesMap ;
+        rml:logicalSource [
+          rml:source "data.json" ;
+          rml:referenceFormulation ql:JSONPath ;
+          rml:iterator "$.involvesBusinessIdentifier"
+        ] ;
+        rr:subjectMap [
+          rr:termType rr:BlankNode ;
+          rr:class <https://ontology.tno.nl/logistics/federated/Event#BusinessIdentifier>
+        ] ;
+        rr:predicateObjectMap [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesAlphanumericBusinessIdentifier> ;
+          rr:objectMap [ rml:reference "involvesAlphanumericBusinessIdentifier" ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesDescriptionBusinessIdentifier> ;
+          rr:objectMap [ rml:reference "involvesDescriptionBusinessIdentifier" ]
+        ]
+      ] ;
+      rr:joinCondition [
+        rr:child "." ;
+        rr:parent ".."
+      ]
+    ]
+  ], [
+    rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesEvent> ;
+    rr:objectMap [
+      rr:parentTriplesMap [
+        a rr:TriplesMap ;
+        rml:logicalSource [
+          rml:source "data.json" ;
+          rml:referenceFormulation ql:JSONPath ;
+          rml:iterator "$.involvesPoLine[*]"
+        ] ;
+        rr:subjectMap [
+          rr:termType rr:BlankNode ;
+          rr:class <https://ontology.tno.nl/logistics/federated/Event#Event>
+        ] ;
+        rr:predicateObjectMap [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesLocation> ;
+          rr:objectMap [
+            rr:parentTriplesMap [
+              a rr:TriplesMap ;
+              rml:logicalSource [
+                rml:source "data.json" ;
+                rml:referenceFormulation ql:JSONPath ;
+                rml:iterator "$.involvesPoLine[*].involvesLocation[*]"
+              ] ;
+              rr:subjectMap [
+                rr:termType rr:BlankNode ;
+                rr:class <https://ontology.tno.nl/logistics/federated/Location#BusinessLocation>
+              ] ;
+              rr:predicateObjectMap [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/Location#involvesPlace> ;
+                rr:objectMap [
+                  rr:parentTriplesMap [
+                    a rr:TriplesMap ;
+                    rml:logicalSource [
+                      rml:source "data.json" ;
+                      rml:referenceFormulation ql:JSONPath ;
+                      rml:iterator "$.involvesPoLine[*].involvesLocation[*].involvesPlace"
+                    ] ;
+                    rr:subjectMap [
+                      rr:termType rr:BlankNode ;
+                      rr:class schema:Place
+                    ] ;
+                    rr:predicateObjectMap [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/Location#locode> ;
+                      rr:objectMap [ rml:reference "locode" ]
+                    ], [
+                      rr:predicate schema:name ;
+                      rr:objectMap [ rml:reference "name" ]
+                    ]
+                  ] ;
+                  rr:joinCondition [
+                    rr:child "." ;
+                    rr:parent ".."
+                  ]
+                ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/Location#locationRole> ;
+                rr:objectMap [ rml:reference "locationRole" ]
+              ]
+            ] ;
+            rr:joinCondition [
+              rr:child "." ;
+              rr:parent ".."
+            ]
+          ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesTimestamp> ;
+          rr:objectMap [
+            rr:parentTriplesMap [
+              a rr:TriplesMap ;
+              rml:logicalSource [
+                rml:source "data.json" ;
+                rml:referenceFormulation ql:JSONPath ;
+                rml:iterator "$.involvesPoLine[*].involvesTimestamp[*]"
+              ] ;
+              rr:subjectMap [
+                rr:termType rr:BlankNode ;
+                rr:class <https://ontology.tno.nl/logistics/federated/Event#Timestamp>
+              ] ;
+              rr:predicateObjectMap [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesTimestampDateTime> ;
+                rr:objectMap [ rml:reference "involvesTimestampDateTime" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesTimeClassification> ;
+                rr:objectMap [ rml:reference "involvesTimeClassification" ]
+              ]
+            ] ;
+            rr:joinCondition [
+              rr:child "." ;
+              rr:parent ".."
+            ]
+          ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesActor> ;
+          rr:objectMap [
+            rr:parentTriplesMap [
+              a rr:TriplesMap ;
+              rml:logicalSource [
+                rml:source "data.json" ;
+                rml:referenceFormulation ql:JSONPath ;
+                rml:iterator "$.involvesPoLine[*].involvesActor[*]"
+              ] ;
+              rr:subjectMap [
+                rr:termType rr:BlankNode ;
+                rr:class <https://ontology.tno.nl/logistics/federated/LegalPerson#Actor>
+              ] ;
+              rr:predicateObjectMap [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#actorRole> ;
+                rr:objectMap [ rml:reference "actorRole" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#involvesLegalPerson> ;
+                rr:objectMap [
+                  rr:parentTriplesMap [
+                    a rr:TriplesMap ;
+                    rml:logicalSource [
+                      rml:source "data.json" ;
+                      rml:referenceFormulation ql:JSONPath ;
+                      rml:iterator "$.involvesPoLine[*].involvesActor[*].involvesLegalPerson"
+                    ] ;
+                    rr:subjectMap [
+                      rr:termType rr:BlankNode ;
+                      rr:class <https://ontology.tno.nl/logistics/federated/LegalPerson#LegalPerson>
+                    ] ;
+                    rr:predicateObjectMap [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#legalPersonName> ;
+                      rr:objectMap [ rml:reference "legalPersonName" ]
+                    ], [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/LegalPerson#legalPersonCountryOfOrigin> ;
+                      rr:objectMap [ rml:reference "legalPersonCountryOfOrigin" ]
+                    ]
+                  ] ;
+                  rr:joinCondition [
+                    rr:child "." ;
+                    rr:parent ".."
+                  ]
+                ]
+              ]
+            ] ;
+            rr:joinCondition [
+              rr:child "." ;
+              rr:parent ".."
+            ]
+          ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesBusinessIdentifier> ;
+          rr:objectMap [
+            rr:parentTriplesMap [
+              a rr:TriplesMap ;
+              rml:logicalSource [
+                rml:source "data.json" ;
+                rml:referenceFormulation ql:JSONPath ;
+                rml:iterator "$.involvesPoLine[*].involvesBusinessIdentifier"
+              ] ;
+              rr:subjectMap [
+                rr:termType rr:BlankNode ;
+                rr:class <https://ontology.tno.nl/logistics/federated/Event#BusinessIdentifier>
+              ] ;
+              rr:predicateObjectMap [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesAlphanumericBusinessIdentifier> ;
+                rr:objectMap [ rml:reference "involvesAlphanumericBusinessIdentifier" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesDescriptionBusinessIdentifier> ;
+                rr:objectMap [ rml:reference "involvesDescriptionBusinessIdentifier" ]
+              ]
+            ] ;
+            rr:joinCondition [
+              rr:child "." ;
+              rr:parent ".."
+            ]
+          ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesCargo> ;
+          rr:objectMap [
+            rr:parentTriplesMap [
+              a rr:TriplesMap ;
+              rml:logicalSource [
+                rml:source "data.json" ;
+                rml:referenceFormulation ql:JSONPath ;
+                rml:iterator "$.involvesPoLine[*].involvesCargo"
+              ] ;
+              rr:subjectMap [
+                rr:termType rr:BlankNode ;
+                rr:class <https://ontology.tno.nl/logistics/federated/DigitalTwin#PiecesGoods>
+              ] ;
+              rr:predicateObjectMap [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#goodsDescription> ;
+                rr:objectMap [ rml:reference "goodsDescription" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#hasWeight> ;
+                rr:objectMap [
+                  rr:parentTriplesMap [
+                    a rr:TriplesMap ;
+                    rml:logicalSource [
+                      rml:source "data.json" ;
+                      rml:referenceFormulation ql:JSONPath ;
+                      rml:iterator "$.involvesPoLine[*].involvesCargo.hasWeight"
+                    ] ;
+                    rr:subjectMap [
+                      rr:termType rr:BlankNode ;
+                      rr:class <https://ontology.tno.nl/logistics/federated/DigitalTwin#WeightMeasurement>
+                    ] ;
+                    rr:predicateObjectMap [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#weightDescription> ;
+                      rr:objectMap [ rml:reference "weightDescription" ]
+                    ], [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#weightValue> ;
+                      rr:objectMap [ rml:reference "weightValue" ]
+                    ]
+                  ] ;
+                  rr:joinCondition [
+                    rr:child "." ;
+                    rr:parent ".."
+                  ]
+                ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#hasVolume> ;
+                rr:objectMap [
+                  rr:parentTriplesMap [
+                    a rr:TriplesMap ;
+                    rml:logicalSource [
+                      rml:source "data.json" ;
+                      rml:referenceFormulation ql:JSONPath ;
+                      rml:iterator "$.involvesPoLine[*].involvesCargo.hasVolume"
+                    ] ;
+                    rr:subjectMap [
+                      rr:termType rr:BlankNode ;
+                      
+                      rr:class <https://ontology.tno.nl/logistics/federated/DigitalTwin#VolumeMeasurement>
+                    ] ;
+                    rr:predicateObjectMap [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#volumeUnitOfMeasure> ;
+                      rr:objectMap [ rml:reference "volumeUnitOfMeasure" ]
+                    ], [
+                      rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#volumeValue> ;
+                      rr:objectMap [ rml:reference "volumeValue" ]
+                    ]
+                  ] ;
+                  rr:joinCondition [
+                    rr:child "." ;
+                    rr:parent ".."
+                  ]
+                ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#numberofPackages> ;
+                rr:objectMap [ rml:reference "numberofPackages" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#quantity> ;
+                rr:objectMap [ rml:reference "quantity" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#hasExternalIdentifier> ;
+                rr:objectMap [ rml:reference "hasExternalIdentifier" ]
+              ], [
+                rr:predicate <https://ontology.tno.nl/logistics/federated/DigitalTwin#quantityType> ;
+                rr:objectMap [ rml:reference "quantityType" ]
+              ]
+            ] ;
+            rr:joinCondition [
+              rr:child "." ;
+              rr:parent ".."
+            ]
+          ]
+        ]
+      ] ;
+      rr:joinCondition [
+        rr:child "." ;
+        rr:parent ".."
+      ]
+    ]
+  ], [
+    rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesTimestamp> ;
+    rr:objectMap [
+      rr:parentTriplesMap [
+        a rr:TriplesMap ;
+        rml:logicalSource [
+          rml:source "data.json" ;
+          rml:referenceFormulation ql:JSONPath ;
+          rml:iterator "$.involvesTimestamp"
+        ] ;
+        rr:subjectMap [
+          rr:termType rr:BlankNode ;
+          rr:class <https://ontology.tno.nl/logistics/federated/Event#Timestamp>
+        ] ;
+        rr:predicateObjectMap [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesTimeClassification> ;
+          rr:objectMap [ rml:reference "involvesTimeClassification" ]
+        ], [
+          rr:predicate <https://ontology.tno.nl/logistics/federated/Event#involvesTimestampDateTime> ;
+          rr:objectMap [ rml:reference "involvesTimestampDateTime" ]
+        ]
+      ] ;
+      rr:joinCondition [
+        rr:child "." ;
+        rr:parent ".."
+      ]
+    ]
+  ] .
+
