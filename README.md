@@ -59,4 +59,5 @@ Sources (in progress):
 6. FIATA - Freight forwarding and multimodal transport documentation - https://github.com/FIATA/eFBL/tree/main
 7. ERA Telematics-TSI - https://gitlab.com/era-europa-eu/public/era-telematics-tsi
 8. World Customs Organization - https://www.wcoomd.org/DataModel
+9. GS1 EPCIS
 
